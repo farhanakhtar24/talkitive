@@ -1,18 +1,18 @@
 "use client";
-import Button from "@/app/components/Button";
-import Input from "@/app/components/Inputs/Input";
-import React, { useCallback, useState } from "react";
+
+import axios from "axios";
+import { signIn, useSession } from "next-auth/react";
+import { useCallback, useEffect, useState } from "react";
+import { BsGithub, BsGoogle } from "react-icons/bs";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import AuthSocialButton from "./AuthSocialButton";
-import { BsGithub, BsGoogle } from "react-icons/bs";
-import axios from "axios";
-import toast from "react-hot-toast";
-
-type Props = {};
+import Button from "@/app/components/Button";
+import { toast } from "react-hot-toast";
+import Input from "@/app/components/Inputs/Input";
 
 type Variant = "LOGIN" | "REGISTER";
 
-const AuthForm = (props: Props) => {
+const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,15 +36,63 @@ const AuthForm = (props: Props) => {
     },
   });
 
+  const registerUser = async (data: FieldValues) => {
+    await axios.post("/api/register", data);
+    const callback = await signIn("credentials", {
+      ...data,
+      redirect: false,
+    });
+
+    if (callback?.error) {
+      toast.error("Invalid credentials!");
+    }
+
+    if (callback?.ok && !callback?.error) {
+      toast.success("Successfully registered!");
+    }
+  };
+
+  const loginUser = async (data: FieldValues) => {
+    const callback = await signIn("credentials", {
+      ...data,
+      redirect: false,
+    });
+
+    if (callback?.error) {
+      toast.error("Invalid credentials!");
+    }
+
+    if (callback?.ok && !callback?.error) {
+      toast.success("Successfully logged in!");
+    }
+  };
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
     try {
       if (variant === "REGISTER") {
-        await axios.post("/api/register", data);
+        await registerUser(data);
+      } else if (variant === "LOGIN") {
+        await loginUser(data);
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const socialAction = async (action: string) => {
+    setIsLoading(true);
+    try {
+      const callback = await signIn(action, { redirect: false });
+
+      if (callback?.error) {
+        toast.error("Invalid credentials!");
       }
 
-      if (variant === "LOGIN") {
-        // axios request to login
+      if (callback?.ok && !callback?.error) {
+        toast.success("Successfully logged in!");
       }
     } catch (error) {
       toast.error("Something went wrong");
@@ -53,40 +101,46 @@ const AuthForm = (props: Props) => {
     }
   };
 
-  const socialAction = (provider: string) => {
-    setIsLoading(true);
-    // axios request to login with google
-  };
-
   return (
     <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div className="bg-white px-4 py-8 shadow sm:rounded-lg sm:px-10">
+      <div
+        className="
+        bg-white
+          px-4
+          py-8
+          shadow
+          sm:rounded-lg
+          sm:px-10
+        "
+      >
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {variant === "REGISTER" && (
             <Input
-              id="name"
-              label="Name"
+              disabled={isLoading}
               register={register}
               errors={errors}
               required
-              disabled={isLoading}
+              id="name"
+              label="Name"
             />
           )}
           <Input
+            disabled={isLoading}
+            register={register}
+            errors={errors}
+            required
             id="email"
             label="Email address"
             type="email"
-            register={register}
-            errors={errors}
-            disabled={isLoading}
           />
           <Input
+            disabled={isLoading}
+            register={register}
+            errors={errors}
+            required
             id="password"
             label="Password"
             type="password"
-            register={register}
-            errors={errors}
-            disabled={isLoading}
           />
           <div>
             <Button disabled={isLoading} fullwidth type="submit">
@@ -94,17 +148,26 @@ const AuthForm = (props: Props) => {
             </Button>
           </div>
         </form>
+
         <div className="mt-6">
           <div className="relative">
-            <div className="absolute inset-0 flex items-center">
+            <div
+              className="
+                absolute 
+                inset-0 
+                flex 
+                items-center
+              "
+            >
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="bg-white px-2 text-gray-500">
-                Or Continue with
+                Or continue with
               </span>
             </div>
           </div>
+
           <div className="mt-6 flex gap-2">
             <AuthSocialButton
               icon={BsGithub}
@@ -116,14 +179,24 @@ const AuthForm = (props: Props) => {
             />
           </div>
         </div>
-        <div className="mt-6 flex justify-center gap-2 px-2 text-sm text-gray-500">
+        <div
+          className="
+            mt-6 
+            flex 
+            justify-center 
+            gap-2 
+            px-2 
+            text-sm 
+            text-gray-500
+          "
+        >
           <div>
             {variant === "LOGIN"
-              ? "New to talkitive ?"
-              : "Already have an account ?"}
+              ? "New to Messenger?"
+              : "Already have an account?"}
           </div>
-          <div className="cursor-pointer underline" onClick={toggleVariant}>
-            {variant === "LOGIN" ? "Register" : "Login"}
+          <div onClick={toggleVariant} className="cursor-pointer underline">
+            {variant === "LOGIN" ? "Create an account" : "Login"}
           </div>
         </div>
       </div>
