@@ -4,6 +4,9 @@ import Input from "@/app/components/Inputs/Input";
 import React, { useCallback, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import AuthSocialButton from "./AuthSocialButton";
+import { BsGithub, BsGoogle } from "react-icons/bs";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 type Props = {};
 
@@ -33,19 +36,24 @@ const AuthForm = (props: Props) => {
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
-    console.log(data);
-    if (variant === "REGISTER") {
-      // axios request to register
-    }
+    try {
+      if (variant === "REGISTER") {
+        await axios.post("/api/register", data);
+      }
 
-    if (variant === "LOGIN") {
-      // axios request to login
+      if (variant === "LOGIN") {
+        // axios request to login
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const socialAction = () => {
+  const socialAction = (provider: string) => {
     setIsLoading(true);
     // axios request to login with google
   };
@@ -61,6 +69,7 @@ const AuthForm = (props: Props) => {
               register={register}
               errors={errors}
               required
+              disabled={isLoading}
             />
           )}
           <Input
@@ -69,6 +78,7 @@ const AuthForm = (props: Props) => {
             type="email"
             register={register}
             errors={errors}
+            disabled={isLoading}
           />
           <Input
             id="password"
@@ -76,6 +86,7 @@ const AuthForm = (props: Props) => {
             type="password"
             register={register}
             errors={errors}
+            disabled={isLoading}
           />
           <div>
             <Button disabled={isLoading} fullwidth type="submit">
@@ -95,7 +106,24 @@ const AuthForm = (props: Props) => {
             </div>
           </div>
           <div className="mt-6 flex gap-2">
-            <AuthSocialButton />
+            <AuthSocialButton
+              icon={BsGithub}
+              onClick={() => socialAction("github")}
+            />
+            <AuthSocialButton
+              icon={BsGoogle}
+              onClick={() => socialAction("google")}
+            />
+          </div>
+        </div>
+        <div className="mt-6 flex justify-center gap-2 px-2 text-sm text-gray-500">
+          <div>
+            {variant === "LOGIN"
+              ? "New to talkitive ?"
+              : "Already have an account ?"}
+          </div>
+          <div className="cursor-pointer underline" onClick={toggleVariant}>
+            {variant === "LOGIN" ? "Register" : "Login"}
           </div>
         </div>
       </div>
