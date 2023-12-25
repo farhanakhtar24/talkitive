@@ -9,12 +9,22 @@ import AuthSocialButton from "./AuthSocialButton";
 import Button from "@/app/components/Button";
 import { toast } from "react-hot-toast";
 import Input from "@/app/components/Inputs/Input";
+import { useRouter } from "next/navigation";
 
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
+
+  const session = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      router.push("/users");
+    }
+  }, [session?.status, router]);
 
   const toggleVariant = useCallback(() => {
     if (variant === "LOGIN") {
@@ -49,6 +59,7 @@ const AuthForm = () => {
 
     if (callback?.ok && !callback?.error) {
       toast.success("Successfully registered!");
+      signIn("credentials", data);
     }
   };
 
@@ -64,6 +75,7 @@ const AuthForm = () => {
 
     if (callback?.ok && !callback?.error) {
       toast.success("Successfully logged in!");
+      router.push("/users");
     }
   };
 
