@@ -21,7 +21,7 @@ const useOtherUser = (
     return otherUser;
   }, [session?.data?.user?.email, conversation.users]);
 
-  return otherUser;
+  return otherUser[0];
 };
 
 export default useOtherUser;
