@@ -4,6 +4,7 @@ import EmptyState from "@/app/components/EmptyState";
 import React from "react";
 import Header from "./components/Header";
 import Body from "./components/Body";
+import Form from "./components/Form";
 
 type Props = {};
 
@@ -30,6 +31,7 @@ const page = async ({ params }: { params: IParams }) => {
       <div className="flex h-full flex-col">
         <Header conversation={conversation} />
         <Body />
+        <Form />
       </div>
     </div>
   );
