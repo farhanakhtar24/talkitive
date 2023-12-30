@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 
 type Props = {
-  user: User;
+  user?: User;
 };
 
 const Avatar = ({ user }: Props) => {
