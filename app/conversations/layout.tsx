@@ -1,6 +1,12 @@
+import { Metadata } from "next";
 import getConversations from "../actions/getConversations";
 import SideBar from "../components/SideBar/SideBar";
 import ConversationsList from "./components/ConversationsList";
+
+export const metadata: Metadata = {
+  title: "Conversations || Talkitive",
+  description: "Conversations page of Talkitive chat app",
+};
 
 export default async function ConversationsLayout({
   children,

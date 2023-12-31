@@ -2,10 +2,11 @@
 import useOtherUser from "@/app/hooks/useOtherUser";
 import { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { IoClose, IoTrash } from "react-icons/io5";
 import Avatar from "@/app/components/Avatar";
+import ConfirmModal from "./ConfirmModal";
 
 type Props = {
   data: Conversation & {
@@ -17,6 +18,7 @@ type Props = {
 
 const ProfileDrawer = ({ data, isOpen, onClose }: Props) => {
   const otherUser = useOtherUser(data);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const joinedData = useMemo(() => {
     return format(new Date(otherUser.createdAt), "PP");
@@ -34,6 +36,10 @@ const ProfileDrawer = ({ data, isOpen, onClose }: Props) => {
 
   return (
     <>
+      <ConfirmModal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+      />
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={onClose}>
           <Transition.Child
@@ -87,7 +93,7 @@ const ProfileDrawer = ({ data, isOpen, onClose }: Props) => {
                           </div>
                           <div className="my-8 flex gap-10">
                             <div
-                              onClick={() => {}}
+                              onClick={() => setConfirmOpen(true)}
                               className="flex cursor-pointer flex-col items-center gap-3 hover:opacity-75"
                             >
                               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100">
