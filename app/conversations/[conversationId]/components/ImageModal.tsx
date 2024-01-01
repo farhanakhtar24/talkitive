@@ -17,7 +17,7 @@ const ImageModal = ({ onClose, src, isOpen }: Props) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="h-80 w-80">
-        <Image className="object-cover" fill alt="Image" src={src} />
+        <Image className="object-contain" fill alt="Image" src={src} />
       </div>
     </Modal>
   );
