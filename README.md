@@ -107,21 +107,3 @@ Facilitate rich communication by sharing attachments and files directly within t
 ### User Profile Customization and Settings
 
 Empower yourself with the ability to customize your profile and adjust application settings to align with your preferences. This personalization feature enhances your overall experience.
-
-### Routing in `app/api`
-
-Delve into the intricacies of routing within the `app/api` directory. Learn how to define and handle POST, GET, and DELETE routes, facilitating effective communication between you and the server.
-
-### Fetching Data in Server React Components
-
-Explore advanced techniques for fetching data directly from the database within server React components. This method bypasses traditional API calls, streamlining data retrieval for improved performance.
-
-### Handling Relations in a Real-Time Environment
-
-Understand the complexities of managing relations between server and child components in a real-time messaging environment. This section provides insights into maintaining data consistency and synchronization.
-
-### Creating and Managing Chat Rooms and Channels
-
-Discover the features and best practices for creating and managing chat rooms and channels within the application. This functionality enhances organizational efficiency and fosters collaborative communication.
-
-This documentation is your comprehensive guide to unlocking the full potential of my real-time messaging application. Whether you are a developer or end-user, use this guide to navigate through the application's features, and enjoy a seamless and engaging communication experience.
