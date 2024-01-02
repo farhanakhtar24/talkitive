@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate": "npx prisma generate --schema=./prisma/schema.prisma"
+    "generate": "npx prisma generate --schema=./prisma/schema.prisma",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
